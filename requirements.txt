@@ -1,4 +1,9 @@
 pylint
+pytest
 Flask
-pandas==0.24.2
-scikit-learn==0.20.3
+pandas
+scikit-learn
+jinja2
+locust
+importlib-metadata
+joblib
