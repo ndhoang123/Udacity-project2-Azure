@@ -5,6 +5,8 @@ install:
 test:
 	python -m pytest -vv test_hello.py
 
+setup:
+	python3 -m venv ~/.udacity-devops
 
 lint:
 	pylint --disable=R,C hello.py
