@@ -3,7 +3,7 @@ from locust import HttpUser, between, task
 
 class PredictTestUser(HttpUser):
     host = "https://flask-ml-app-predict.azurewebsites.net:443"
-    wait_time = between(1, 5)
+    wait_time = between(0.5, 2)
 
     @task
     def index(self):
