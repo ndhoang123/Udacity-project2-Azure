@@ -23,10 +23,8 @@ def home():
     html = "<h3>Sklearn Prediction Home</h3>"
     return html.format(format)
 
-# TO DO:  Log out the prediction value!
 @app.route("/predict", methods=['POST'])
 def predict():
-
     try:
         clf = joblib.load("./Housing_price_model/StochasticGradientDescent.joblib")
     except:
