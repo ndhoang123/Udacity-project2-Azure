@@ -28,7 +28,7 @@ def home():
 def predict():
 
     try:
-        clf = joblib.load("./Housing_price_model/GradientBoostingRegressor.joblib")
+        clf = joblib.load("./Housing_price_model/StochasticGradientDescent.joblib")
     except:
         LOG.info("JSON payload: %s json_payload")
         return "Model not loaded"
