@@ -24,8 +24,8 @@ variables:
   # Project root folder. Point to the folder containing manage.py file.
   projectRoot: $(System.DefaultWorkingDirectory)
 
-  # Python version: 3.9.18
-  pythonVersion: '3.9.18'
+  # Python version: 3.8
+  pythonVersion: '3.8'
 
 stages:
 - stage: Build
@@ -34,9 +34,6 @@ stages:
   - job: BuildJob
     pool: UdaProject2Pool
     steps:
-    - uses: actions/setup-python@v2
-    with:
-      python-version: '3.9'
     - task: UsePythonVersion@0
       inputs:
         versionSpec: '$(pythonVersion)'
