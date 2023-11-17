@@ -10,7 +10,7 @@ pool: UdaProject2Pool
 
 variables:
   # TODO: Replace the service connection name as used in the DevOps project settings
-  azureServiceConnectionId: 'udacityconnection'
+  azureServiceConnectionId: '06075401-77fb-47ed-921b-47448b375cb9'
   
   # TODO: Specify the value of the existing Web App name
   webAppName: 'flask-app-predict-1117'
