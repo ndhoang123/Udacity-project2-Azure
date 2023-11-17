@@ -1,19 +1,22 @@
-# Starter pipeline    
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
+# Python to Linux Web App on Azure
+# Build your Python project and deploy it to Azure as a Linux Web App.
+# Change python version to one thats appropriate for your application.
+# https://docs.microsoft.com/azure/devops/pipelines/languages/python
+
 trigger:
 - main
 
-# TODO: Replace the agent pool name
 pool: UdaProject2Pool
 
 variables:
-  # TODO: Replace the service connection name as used in the DevOps project settings
+  # Azure Resource Manager connection created during pipeline creation
   azureServiceConnectionId: '06075401-77fb-47ed-921b-47448b375cb9'
-  
-  # TODO: Specify the value of the existing Web App name
+
+  # Web app name
   webAppName: 'flask-app-predict-1117'
+
+  # Agent VM image name
+  vmImageName: 'ubuntu-latest'
 
   # Environment name
   environmentName: 'flask-ml-service'
@@ -21,35 +24,32 @@ variables:
   # Project root folder. Point to the folder containing manage.py file.
   projectRoot: $(System.DefaultWorkingDirectory)
 
+  # Python version: 3.9
+  pythonVersion: '3.9'
+
 stages:
 - stage: Build
   displayName: Build stage
   jobs:
   - job: BuildJob
     pool: UdaProject2Pool
-    steps:    
-    - script: |
-        python3.9 -m pip install --upgrade pip
-        python3.9 -m pip install setup
-        python3.9 -m pip install -r requirements.txt
-      workingDirectory: $(projectRoot)
-      displayName: 'myStep 1'
+    steps:
+    - task: UsePythonVersion@0
+      inputs:
+        versionSpec: '$(pythonVersion)'
+      displayName: 'Use Python $(pythonVersion)'
 
     - script: |
-        export PATH=$HOME/.local/bin:$PATH
-        make install
+        python -m venv antenv
+        source antenv/bin/activate
+        python -m pip install --upgrade pip
+        pip install setup
+        pip install -r requirements.txt
       workingDirectory: $(projectRoot)
-      displayName: 'myStep 2'
-
-    - script: |
-        export PATH=$HOME/.local/bin:$PATH
-        make install
-        make lint
-      workingDirectory: $(projectRoot)
-      displayName:  'myStep 3 - Run lint tests'
+      displayName: "Install requirements"
 
     - task: ArchiveFiles@2
-      displayName: 'myStep 4 - Archive files'
+      displayName: 'Archive files'
       inputs:
         rootFolderOrFile: '$(projectRoot)'
         includeRootFolder: false
@@ -57,6 +57,32 @@ stages:
         archiveFile: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
         replaceExistingArchive: true
 
-    - upload: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
-      displayName: 'myStep 5 - Upload package'
+    - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
+      displayName: 'Upload package'
       artifact: drop
+
+- stage: Deploy
+  displayName: 'Deploy Web App'
+  dependsOn: Build
+  condition: succeeded()
+  jobs:
+  - deployment: DeploymentJob
+    pool: UdaProject2Pool
+    environment: $(environmentName)
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: '$(pythonVersion)'
+            displayName: 'Use Python version'
+
+          - task: AzureWebApp@1
+            displayName: 'Deploy Azure Web App : {{ webAppName }}'
+            inputs:
+              azureSubscription: $(azureServiceConnectionId)
+              appName: $(webAppName)
+              package: $(Pipeline.Workspace)/drop/$(Build.BuildId).zip
+              appType: webApp
