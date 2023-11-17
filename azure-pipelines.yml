@@ -6,7 +6,7 @@
 trigger:
 - main
 
-pool: UdacityProjectAgentPool
+pool: UdaProject2Pool
 
 steps:
 - script: echo Hello, world!
