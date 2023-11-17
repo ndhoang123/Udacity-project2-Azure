@@ -3,8 +3,8 @@
 # Change python version to one thats appropriate for your application.
 # https://docs.microsoft.com/azure/devops/pipelines/languages/python
 
-trigger:
-- main
+# trigger:
+# - main
 
 pool: UdaProject2Pool
 
@@ -80,7 +80,7 @@ stages:
             displayName: 'Use Python version'
 
           - task: AzureWebApp@1
-            displayName: 'Deploy Azure Web App : {{ webAppName }}'
+            displayName: 'Deploy Azure Web App: flask-app-predict-1117'
             inputs:
               azureSubscription: $(azureServiceConnectionId)
               appName: $(webAppName)
