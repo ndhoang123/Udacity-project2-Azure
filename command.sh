@@ -1,0 +1,1 @@
+az webapp up --name flask-app-predict-1119 --resource-group Udacity --sku B1 --logs --runtime "PYTHON:3.8"
