@@ -13,7 +13,7 @@ variables:
   azureServiceConnectionId: '06075401-77fb-47ed-921b-47448b375cb9'
 
   # Web app name
-  webAppName: 'flask-app-predict-1117'
+  webAppName: 'flask-app-predict-1118'
 
   # Agent VM image name
   vmImageName: 'ubuntu-latest'
@@ -80,7 +80,7 @@ stages:
             displayName: 'Use Python version'
 
           - task: AzureWebApp@1
-            displayName: 'Deploy Azure Web App: flask-app-predict-1117'
+            displayName: 'Deploy Azure Web App: flask-app-predict-1118'
             inputs:
               azureSubscription: $(azureServiceConnectionId)
               appName: $(webAppName)
